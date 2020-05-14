@@ -6,5 +6,3 @@ and pushes everything to get, wifi turns my wifi off then on again
 I also have a folder containing various notes on things I commonly
 lookup so that I have a quick reference when nessisary.
 
-
-
