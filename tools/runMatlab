@@ -1,0 +1,1 @@
+cd /Applications/MATLAB_R2019b.app/bin; ./matlab -nodesktop -nosplash

@@ -1,0 +1,4 @@
+#!/usr/local/bin/python3
+from ascii import getErrors; import sys
+print(getErrors(sys.argv[1:]))
+

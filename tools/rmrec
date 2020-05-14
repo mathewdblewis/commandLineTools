@@ -1,0 +1,12 @@
+#!/usr/local/bin/python3
+
+from os import system; import sys; from subprocess import check_output as check
+filenames = sys.argv[1:]
+
+files = "./\n"+check(['ls','-R','-a']).decode("utf-8")
+filesList = files.split('\n\n')
+
+for drct in filesList:
+	drct = drct.split('\n')
+	path,drct = drct[0][:-1]+"/",drct[3:]
+	[check(['rm',path+file]) for file in drct if file in filenames]

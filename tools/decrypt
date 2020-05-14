@@ -1,0 +1,21 @@
+#!/usr/local/bin/python3
+import sys; from os import system
+
+if len(sys.argv)!=2:
+	print("you must provide the name of the file to decrypt")
+	exit(1)
+
+file = sys.argv[1]
+if file[-4:] != ".enc":
+	print("the file must end in .enc")
+	exit(1)
+if len(file)==4:
+	raise Exception("the filename can't just be .enc")
+
+file = file[:-4]
+print("Paste the password below and press enter")
+system("openssl enc -in " + file + ".enc -d -aes-256-cbc -pass stdin > " + file)
+
+
+
+

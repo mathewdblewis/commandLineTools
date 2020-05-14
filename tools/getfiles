@@ -1,0 +1,12 @@
+#!/usr/local/bin/python3
+from os import system; import sys
+
+try:
+	url,a,b = sys.argv[1],int(sys.argv[2]),int(sys.argv[3])
+except:
+	print("First input:\turl\nSecond input:\tstart num\nThird input:\tend num")
+	exit(1)
+
+for num in range(a,b):
+	cmd = 'curl -s ' + url + str(num) + '.jpg > ' + str(num) + '.jpg'
+	print(num); system(cmd)

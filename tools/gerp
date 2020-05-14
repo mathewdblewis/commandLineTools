@@ -1,0 +1,44 @@
+#!/usr/local/bin/python3
+
+from os import system
+import sys
+
+def disp(file):
+	stars = "***************"
+	L = open(file).read().split("\n")
+	lineNumbers = [i for i in range(len(L)) if word in L[i]]
+	lines = [[j,"\n".join(L[j-before:j+after+1])] for j in lineNumbers]
+	output = ""
+	for line in lines:
+		output += "\n\n" + stars + " " + file + " line "
+		output += str(line[0]) + " " + stars + "\n\n" + line[1]
+	print(output)
+
+
+arg = sys.argv
+
+if len(arg) == 4:
+	word = arg[1]
+	before = int(arg[2])
+	after = int(arg[3])
+	system("ls > .gerp_temp_file")
+	L = open(".gerp_temp_file").read().split("\n")[:-1]
+	for l in L:
+		disp(l)
+
+elif len(arg) == 5:
+	word = arg[1]
+	fileName = arg[2]
+	before = int(arg[3])
+	after = int(arg[4])
+	disp(fileName)
+
+else:
+	print("input should be given like so:")
+	print("  first input: search word")
+	print("  second input: file to search")
+	print("  third input: number of lines before")
+	print("  fourth input: number of lines after")
+
+
+

@@ -1,0 +1,3 @@
+to edit path, do this:
+sudo vim /etc/paths
+

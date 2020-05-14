@@ -1,0 +1,17 @@
+#!/usr/local/bin/python3
+
+from os import system; import sys; from subprocess import check_output as check
+
+if len(sys.argv)!=2:
+  print('must give 1 argument, the name of the file')
+  exit(1)
+
+filetype = sys.argv[1]
+ln = len(filetype)
+L = check(['ls']).decode("utf-8").split('\n')[:-1]
+filename = filetype + (str(len([l for l in L if l[:ln]==filetype])+1)).zfill(3)
+folder = check(['pwd']).decode("utf-8").split('/')[-1][:-1]
+content = check(['date']).decode("utf-8") + folder + ' ' + filename + '\n'*25
+open(filename+'.txt','w').write(content)
+
+

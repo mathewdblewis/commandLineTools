@@ -1,0 +1,2 @@
+to pretty print json, do this:
+cat test.json | python -m json.tool

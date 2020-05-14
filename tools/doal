@@ -1,0 +1,13 @@
+#!/usr/local/bin/python3
+from os import system; from sys import argv
+
+system("ls > .doal.temp.txt")
+x = open(".doal.temp.txt").read().split('\n')[:-1]
+system("rm .doal.temp.txt")
+
+if len(argv)!=2:
+	print("input: name of command to run on all files in folder")
+	exit(1)
+
+for t in x:
+	system(argv[1]+" "+t)

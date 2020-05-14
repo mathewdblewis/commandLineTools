@@ -1,0 +1,7 @@
+A minimal working example of how to plot a list of y values against a list of x values:
+
+  import matplotlib.pyplot as plt
+  plt.scatter(x,y)
+  plt.show()
+
+

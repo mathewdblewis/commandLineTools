@@ -1,0 +1,14 @@
+#!/usr/local/bin/python3
+import sys; from os import system
+
+if len(sys.argv)!=2:
+	print("you must provide the name of the file to encrypt")
+	exit(1)
+
+file = sys.argv[1]
+print("Paste the password below and press enter")
+system("openssl enc -in " + file + " -aes-256-cbc -pass stdin > " + file + ".enc")
+
+
+
+
