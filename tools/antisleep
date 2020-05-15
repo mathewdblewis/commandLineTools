@@ -1,0 +1,12 @@
+#!/usr/local/bin/python3
+
+from pyautogui import moveTo, position; from time import sleep
+
+while True:
+  sleep(60)
+  x,y = position()
+  moveTo(x,y+1)
+  moveTo(x,y-1)
+  moveTo(x,y)
+
+
