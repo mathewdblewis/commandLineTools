@@ -1,0 +1,4 @@
+how to make a gif using python
+
+stackoverflow.com/questions/753190
+

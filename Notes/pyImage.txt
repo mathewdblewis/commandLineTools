@@ -1,0 +1,13 @@
+A minimal working example of how to write make an image file using python
+
+
+
+from PIL import Image; import numpy as np
+
+ar  = [[[x,0,0] for x in range(256)] for _ in range(80)]
+ar += [[[0,x,0] for x in range(256)] for _ in range(80)]
+ar += [[[0,0,x] for x in range(256)] for _ in range(80)]
+
+Image.fromarray(np.uint8(ar)).save('asdf.png')
+
+
