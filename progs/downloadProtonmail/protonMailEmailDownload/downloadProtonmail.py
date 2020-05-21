@@ -5,6 +5,20 @@
 from pyautogui import locate,scroll,click,screenshot,press,moveTo
 from time import sleep
 import numpy as np; from PIL import Image; from scipy import signal
+from subprocess import run, check_output as call
+
+def date(l):
+	return l[-29:16-29].replace('T','.').replace('-','.').replace(' ','.')
+
+def mvMailToDir():
+	L = call("ls " + dir, shell=True).decode().split("\n")[:-1]
+	for l in L:
+		old = '\\ '.join(l.split(' '))
+		new =   '_'.join(l.split(' '))
+		temp = "mv ~/Downloads/" + old + " emails/" + date(l) + '_' + new
+		call(temp,shell=True)
+
+
 
 def clickOn(imgFile,x,y,w,h):
 	B = None
@@ -18,3 +32,13 @@ while True:
 	clickOn("buttons/expo.png",1230*2,250*2, 30*2,650*2)
 	clickOn("buttons/ok.png",   800*2,560*2,100*2, 40*2)
 	press('escape'); press('down'); press('enter')
+
+
+
+
+
+
+
+
+
+
