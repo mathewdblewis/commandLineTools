@@ -8,3 +8,11 @@ are very small scripts that just call other scripts.
 I also have a folder containing various notes on things I commonly
 lookup so that I have a quick reference when nessisary. I hope to
 add to this folder so it becomes more comprehensive.
+
+summary:  
+notes:    notes on various programming things  
+old:      old code that I don't use any more  
+progs:    programs that I don't want in my path  
+tools:    programs I do want in my path  
+
+
