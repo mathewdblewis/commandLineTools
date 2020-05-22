@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 
 from os import system; import sys; from subprocess import check_output as check
-from ascii import getErrors
+# from ascii import getErrors
 
 # this is the path to pdflatex, change if nessisary
 path = '/Library/TeX/texbin/pdflatex'
@@ -11,7 +11,7 @@ if len(sys.argv) not in [2,3] or (len(sys.argv)==3 and sys.argv[2]!='-V'):
 	print('The first argument must be the name of the latex file to compile')
 	print('The optional second argument "-V" may be including')
 	print('Doing so results in verbose output')
-        system('zsh; subl *.tex; open *.pdf')
+	system('zsh; subl *.tex; open *.pdf')
 	exit(0)
 
 # get file name
@@ -25,10 +25,12 @@ except IOError:
 	exit(1)
 
 # run ascii.getErrors on the file make sure it doesn't have non ascii characters
+'''
 errors = getErrors([filename])
 if errors != '':
 	print(errors)
 	exit(1)
+'''
 
 # run the compiler and remove unnessisary files
 output = check([path, filename]).decode("utf-8")
@@ -37,6 +39,7 @@ system('rm -f *.aux *.log *.gz')
 # if we are not in verbose mode clean the output so it looks nice
 if len(sys.argv)==2:
 	output = "\n".join(output.split('\n\n')[1:-1])
+
 
 # if there is no output, exit
 # this prevents the printing of a single empty line
