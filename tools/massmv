@@ -1,0 +1,16 @@
+#!/usr/local/bin/python3
+
+from sys import argv
+from subprocess import check_output as call
+
+if len(argv)!=3:
+	print('this program moves all files with the old extension')
+	print('to files with the new extension')
+	print("input: [old extension] [new extension]")
+	print("eg: massmv .jpg .gif")
+	exit(1)
+
+ext1,ext2 = argv[1],argv[2]
+for file in call('ls', shell=True).decode().split('\n')[:-1]:
+	if file[-len(ext1):] == ext1:
+		call('mv ' + file + ' ' + file[:-len(ext1)] + ext2, shell=True)
