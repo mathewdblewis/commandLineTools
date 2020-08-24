@@ -1,0 +1,5 @@
+https://www.ffmpeg.org/
+
+do this:
+ffmpeg -i input.mp4 output.avi
+
