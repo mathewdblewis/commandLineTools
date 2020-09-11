@@ -1,0 +1,26 @@
+#!/usr/local/bin/python3
+
+from PIL import Image; import numpy as np; from sys import argv
+
+if len(argv) != 2:
+	print('input the name of the file to encode as an image')
+	exit(1)
+fileName = argv[1]
+
+
+
+
+
+
+exit()
+
+ar  = [[[x,0,0] for x in range(256)] for _ in range(80)]
+ar += [[[0,x,0] for x in range(256)] for _ in range(80)]
+ar += [[[0,0,x] for x in range(256)] for _ in range(80)]
+
+Image.fromarray(np.uint8(ar)).save('asdf.png')
+
+
+
+
+
