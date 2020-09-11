@@ -3,7 +3,11 @@
 from PIL import Image; import numpy as np; from sys import argv
 
 if len(argv) != 2:
-	print('input the name of the file to encode as an image')
+	print('Input the name of the file to encode as images.')
+	print('Follow this by the desired root name of the output file.')
+	print('Finally, follow with the desired height and width of the images.')
+	print('Example:\tpython3 encodetoimg input.txt output.png 400 500')
+	print('This will generate files with names output_01.png, output_02.png etc.')
 	exit(1)
 fileName = argv[1]
 
