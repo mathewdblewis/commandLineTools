@@ -1,12 +1,11 @@
 #!/usr/local/bin/python3
 
+from os import system; from time import sleep
 import urllib.request; from sys import argv
 from multiprocessing import Pool
+import argparse; import pathlib
 from json import loads,dumps
-from os import system
-from time import sleep
-import argparse
-import pathlib
+
 
 
 def titleAndVids(url):
@@ -48,6 +47,16 @@ def openUrls(urls,browser):
 	system("open '" + urls[0] + "' -a " + browser)
 	sleep(1)
 	[system("open '" + v + "' -a " + browser) for v in urls[1:]]
+
+def titleToUrl(title):
+	try:
+		title = ''.join('+'.join(title.split(' ')).split("'"))
+		url   = 'https://www.youtube.com/results?search_query=' + title
+		html  = urllib.request.urlopen(url).read().decode()
+		url   = 'https://www.youtube.com/channel/'
+		return url+html.split('channelId":"')[1].split('"')[0]
+	except: return ''
+
 
 
 
@@ -102,7 +111,7 @@ def main():
 if __name__ == '__main__':
 	path = str(pathlib.Path(__file__).parent.absolute())+'/'
 	channels = path+'channels.txt'
-	
+
 	unwatched(channels,'Firefox',10)
 	# latestVids(channels,'Firefox')
 
