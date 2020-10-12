@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 youtubeCode/code.py
+python3 /Users/mathewlewis/.bin/tools/youtubeCode/code.py
