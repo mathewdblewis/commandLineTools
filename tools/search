@@ -1,0 +1,14 @@
+#!/usr/local/bin/python3
+from sys import argv
+from os import system
+
+browser = 'Firefox'
+url = "open 'https://duckduckgo.com/?t=ffab&q="
+system(url + '+'.join(argv[1:]) + "&ia=web' -a " + browser)
+
+
+
+
+
+
+
