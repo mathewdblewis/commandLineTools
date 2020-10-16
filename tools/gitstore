@@ -1,0 +1,14 @@
+#!/usr/local/bin/python3
+
+'''
+PLAN: pass a directory name to the CLT, and it will zip it, encrypt it and break it
+into files of size 10MB each, then it will push groups of 4.9GB of data (490 files)
+to a repo
+also have functionality to pull and decrypt
+'''
+
+
+
+
+
+
