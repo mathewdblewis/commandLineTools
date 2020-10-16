@@ -1,0 +1,8 @@
+#!/usr/local/bin/python3
+
+'''
+GOAL: a tool which grabs all my emails from protonmail
+I want to be able to send emails from console, download emails, etc
+'''
+
+
