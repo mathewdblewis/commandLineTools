@@ -1,0 +1,9 @@
+how to use tar to turn a directory into a file:
+# to unzip a file
+# 'tar -xf temp.zip'
+
+# to zip a file
+# tar -czf temp.zip folder
+
+
+
