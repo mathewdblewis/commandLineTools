@@ -17,6 +17,10 @@ maxbytes = 10*1000**2	# 10MB
 maxfiles = 499			# 499*10MB = 4990MB = 4.99GB
 maxrepos = 100			# 
 
+maxbytes = 50
+maxfiles = 4
+
+
 
 def getCipher(password):
 	kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),length=32,salt=salt,iterations=100000,backend=default_backend())
@@ -91,7 +95,6 @@ def delZip(token,username,password,zipName):
 			delRepo(token,username,repoName)
 	except:
 		print("ERROR: no such file found for deleting")
-		print("no file delete")
 		exit(1)
 
 def downloadZip(token,username,password,encrpytionPassword,zipName):
@@ -99,7 +102,7 @@ def downloadZip(token,username,password,encrpytionPassword,zipName):
 	try:
 		open(zipName,'r')
 		print("ERROR: " + zipName + " already exists")
-		print("move the file out of the way before downloading")
+		print("Move this file out of the way before downloading")
 		FAIL = True
 	except: pass
 	if FAIL: exit(1)
@@ -109,12 +112,14 @@ def downloadZip(token,username,password,encrpytionPassword,zipName):
 		print('downloading repo ' + repoName,flush=True)
 		system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
 		numRepos = int(open(repoName+'/numRepos.txt','r').read())
-		content = gitrepoContent(repoName)
+		content = getCipher(encrpytionPassword).decrypt(gitrepoContent(repoName))
 		system('rm -rf ' + repoName)
 		for n in range(1,numRepos):
 			repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
-			system(url + '@github.com/' + username + '/' + repoName)
-			content += getCipher(encrpytionPassword).decrypt(gitrepoContent(repoName))
+			system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
+			part = getCipher(encrpytionPassword).decrypt(gitrepoContent(repoName))
+			print(part)
+			content += part
 			system('rm -rf ' + repoName)
 		open(zipName,'wb').write(content)
 	except:
