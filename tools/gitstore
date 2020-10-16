@@ -17,10 +17,6 @@ maxbytes = 10*1000**2	# 10MB
 maxfiles = 499			# 499*10MB = 4990MB = 4.99GB
 maxrepos = 100			# 
 
-# temporary values used during development
-maxbytes = 10000
-maxfiles = 15
-
 
 def getCipher(password):
 	kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),length=32,salt=salt,iterations=100000,backend=default_backend())
