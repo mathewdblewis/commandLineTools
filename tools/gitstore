@@ -47,11 +47,10 @@ def delRepo(token,userName,repoName):
 	system(curl + token + url + userName + "/"+repoName)
 
 def uploadZip(token,userName,encrpytionPassword,zipName):
-	try: fileContent = open(zipName,'rb').read()
+	try: repos = open(zipName,'rb').read()
 	except:
 		print(zipName+' not found')
 		exit(1)
-	repos = getCipher(encrpytionPassword).encrypt(fileContent)
 	repos = [repos[k*maxbytes:(k+1)*maxbytes] for k in range(len(repos)//maxbytes+1)]
 	repos = [repos[k*maxfiles:(k+1)*maxfiles] for k in range(len(repos)//maxfiles+1)]
 
@@ -67,7 +66,8 @@ def uploadZip(token,userName,encrpytionPassword,zipName):
 		createFile(token,userName,repoName,'numFiles.txt',str(len(files)))
 		for j in range(len(files)):
 			fileName = repoName+'file'+str(j).zfill(len(str(maxfiles)))
-			createFile(token,userName,repoName,fileName,files[j])
+			fileContent = getCipher(encrpytionPassword).encrypt(files[j])
+			createFile(token,userName,repoName,fileName,fileContent)
 
 def gitrepoContent(repoName):
 	numFiles = int(open(repoName+'/numFiles.txt','r').read())
@@ -114,9 +114,8 @@ def downloadZip(token,username,password,encrpytionPassword,zipName):
 		for n in range(1,numRepos):
 			repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
 			system(url + '@github.com/' + username + '/' + repoName)
-			content += gitrepoContent(repoName)
+			content += getCipher(encrpytionPassword).decrypt(gitrepoContent(repoName))
 			system('rm -rf ' + repoName)
-		content = getCipher(encrpytionPassword).decrypt(content)
 		open(zipName,'wb').write(content)
 	except:
 		print('ERROR: no such file found')
