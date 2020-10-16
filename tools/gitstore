@@ -1,11 +1,178 @@
 #!/usr/local/bin/python3
 
-'''
-PLAN: pass a directory name to the CLT, and it will zip it, encrypt it and break it
-into files of size 10MB each, then it will push groups of 4.9GB of data (490 files)
-to a repo
-also have functionality to pull and decrypt
-'''
+from github import Github # pygithub.readthedocs.io/en/latest
+from sys import argv
+from os import system
+from getpass import getpass
+from os.path import expanduser
+import json; import base64
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+
+salt = b'3.141592653589793'
+maxbytes = 10*1000**2	# 10MB
+maxfiles = 499			# 499*10MB = 4990MB = 4.99GB
+maxrepos = 100			# 
+
+# temporary values used during development
+maxbytes = 10000
+maxfiles = 15
+
+
+def getCipher(password):
+	kdf = PBKDF2HMAC(algorithm=hashes.SHA256(),length=32,salt=salt,iterations=100000,backend=default_backend())
+	return Fernet(base64.urlsafe_b64encode(kdf.derive(password.encode('utf-8'))))
+
+def createRepo(token,repoName):
+	try:
+		print('creating new repo: ' + repoName, flush=True)
+		g = Github(token)
+		g.get_user().create_repo(repoName)
+	except:
+		print("ERROR: a file by this name already exists")
+		exit(1)
+
+def createFile(token,userName,repoName,fileName,fileContent):
+	try:
+		print('creating new file: ' + fileName, flush=True)
+		g = Github(token)
+		repo = g.get_repo(userName+"/"+repoName)
+		repo.create_file(fileName, "commit message", fileContent, branch="test")
+	except:
+		print("ERROR: file not created")
+
+def delRepo(token,userName,repoName):
+	print('deleting the repo ' + repoName)
+	curl = "curl -X DELETE -H 'Authorization: token "
+	url = "' https://api.github.com/repos/"
+	system(curl + token + url + userName + "/"+repoName)
+
+def uploadZip(token,userName,encrpytionPassword,zipName):
+	try: fileContent = open(zipName,'rb').read()
+	except:
+		print(zipName+' not found')
+		exit(1)
+	repos = getCipher(encrpytionPassword).encrypt(fileContent)
+	repos = [repos[k*maxbytes:(k+1)*maxbytes] for k in range(len(repos)//maxbytes+1)]
+	repos = [repos[k*maxfiles:(k+1)*maxfiles] for k in range(len(repos)//maxfiles+1)]
+
+	print('number of repos to upload: ' + str(len(repos)))
+	print('number of files per repo: ' + str(len(repos[0])))
+
+	for i in range(len(repos)):
+		repoName = zipName+'_'+str(i).zfill(len(str(maxrepos)))
+		createRepo(token,repoName)
+		if i == 0:
+			createFile(token,userName,repoName,'numRepos.txt',str(len(repos)))
+		files = repos[i]
+		createFile(token,userName,repoName,'numFiles.txt',str(len(files)))
+		for j in range(len(files)):
+			fileName = repoName+'file'+str(j).zfill(len(str(maxfiles)))
+			createFile(token,userName,repoName,fileName,files[j])
+
+def gitrepoContent(repoName):
+	numFiles = int(open(repoName+'/numFiles.txt','r').read())
+	content = ""
+	for n in range(numFiles):
+		fileName = repoName+'/'+repoName+'file'
+		file = fileName+str(n).zfill(len(str(maxfiles)))
+		if content == "": content = open(file,'rb').read()
+		else: content += open(fileName+str(n).zfill(len(str(maxfiles))),'rb').read()
+	return content
+
+def delZip(token,username,password,zipName):
+	try:
+		repoName = zipName + '_' + str(0).zfill(len(str(maxrepos)))
+		url = 'git clone https://' + username + ':' + password
+		system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
+		numRepos = int(open(repoName+'/numRepos.txt','r').read())
+		system('rm -rf ' + repoName)
+		for n in range(numRepos):
+			repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
+			delRepo(token,username,repoName)
+	except:
+		print("ERROR: no such file found for deleting")
+		print("no file delete")
+		exit(1)
+
+def downloadZip(token,username,password,encrpytionPassword,zipName):
+	FAIL = False
+	try:
+		open(zipName,'r')
+		print("ERROR: " + zipName + " already exists")
+		print("move the file out of the way before downloading")
+		FAIL = True
+	except: pass
+	if FAIL: exit(1)
+	try:
+		repoName = zipName + '_' + str(0).zfill(len(str(maxrepos)))
+		url = 'git clone https://' + username + ':' + password
+		print('downloading repo ' + repoName,flush=True)
+		system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
+		numRepos = int(open(repoName+'/numRepos.txt','r').read())
+		content = gitrepoContent(repoName)
+		system('rm -rf ' + repoName)
+		for n in range(1,numRepos):
+			repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
+			system(url + '@github.com/' + username + '/' + repoName)
+			content += gitrepoContent(repoName)
+			system('rm -rf ' + repoName)
+		content = getCipher(encrpytionPassword).decrypt(content)
+		open(zipName,'wb').write(content)
+	except:
+		print('ERROR: no such file found')
+		exit(1)
+
+
+
+
+
+if len(argv) != 3:
+	print('ERROR: must provide 2 inputs: command filename')
+	print("command is one of the following")
+	print("upload,download,delete")
+	exit(1)
+
+command,zipName = argv[1],argv[2]
+
+username = input('Enter your github username: ')
+encrpytionPassword = getpass('Enter your encryption password: ')
+keyfile = expanduser('~')+'/.gitstore.'+username+".json.enc"
+try:
+	content = open(keyfile,'rb').read()
+except:
+	print("The file "+keyfile+' was not found')
+	print("Please input the following:")
+	password = getpass('Enter your github password: ')
+	token = getpass('Enter your github token: ')
+	content = json.dumps({"password":password,'token':token}).encode('utf-8')
+	open(keyfile,'wb').write(getCipher(encrpytionPassword).encrypt(content))
+try:
+	key = json.loads(getCipher(encrpytionPassword).decrypt(content))
+	password,token = key['password'],key['token']
+except:
+	print("Either the file "+keyfile+' was corrupted')
+	print("or your password was wrong")
+	exit(1)
+
+
+
+if command == 'upload':
+	uploadZip(token,username,encrpytionPassword,zipName)
+if command == 'download':
+	downloadZip(token,username,password,encrpytionPassword,zipName)
+if command == 'delete':
+	delZip(token,username,password,zipName)
+
+
+
+
+
+
+
 
 
 
