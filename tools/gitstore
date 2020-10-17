@@ -17,9 +17,6 @@ maxbytes = 10*1000**2	# 10MB
 maxfiles = 499			# 499*10MB = 4990MB = 4.99GB
 maxrepos = 100			# 
 
-maxbytes = 50000
-maxfiles = 4
-
 
 
 def getCipher(password):
@@ -76,6 +73,20 @@ def uploadZip(token,userName,encrpytionPassword,zipName):
 			fileName = repoName+'file'+str(j).zfill(len(str(maxfiles)))
 			createFile(token,userName,repoName,fileName,files[j],encrpytionPassword)
 
+def delZip(token,username,password,zipName):
+	try:
+		repoName = zipName + '_' + str(0).zfill(len(str(maxrepos)))
+		url = 'git clone https://' + username + ':' + password
+		system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
+		numRepos = int(open(repoName+'/numRepos.txt','r').read())
+		system('rm -rf ' + repoName)
+		for n in range(numRepos):
+			repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
+			delRepo(token,username,repoName)
+	except:
+		print("ERROR: no such file found for deleting")
+		exit(1)
+
 def gitrepoContent(repoName,encrpytionPassword):
 	C = getCipher(encrpytionPassword)
 	numFiles = int(open(repoName+'/numFiles.txt','r').read())
@@ -86,21 +97,32 @@ def gitrepoContent(repoName,encrpytionPassword):
 	return content
 
 def downloadZip(token,username,password,encrpytionPassword,zipName):
-	repoName = zipName + '_' + str(0).zfill(len(str(maxrepos)))
-	url = 'git clone https://' + username + ':' + password
-	print('downloading repo ' + repoName,flush=True)
-	system('rm -rf ' + repoName)
-	system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
-	numRepos = int(open(repoName+'/numRepos.txt','r').read())
-	content = gitrepoContent(repoName,encrpytionPassword)
-	system('rm -rf ' + repoName)
-	for n in range(1,numRepos):
-		repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
-		system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
-		content += gitrepoContent(repoName,encrpytionPassword)
+	FAIL = False
+	try:
+		open(zipName,'r')
+		print("ERROR: " + zipName + " already exists")
+		print("Move this file out of the way before downloading")
+		FAIL = True
+	except: pass
+	if FAIL: exit(1)
+	try:
+		repoName = zipName + '_' + str(0).zfill(len(str(maxrepos)))
+		url = 'git clone https://' + username + ':' + password
+		print('downloading repo ' + repoName,flush=True)
 		system('rm -rf ' + repoName)
-	open(zipName,'wb').write(content)
-
+		system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
+		numRepos = int(open(repoName+'/numRepos.txt','r').read())
+		content = gitrepoContent(repoName,encrpytionPassword)
+		system('rm -rf ' + repoName)
+		for n in range(1,numRepos):
+			repoName = zipName + '_' + str(n).zfill(len(str(maxrepos)))
+			system(url + '@github.com/' + username + '/' + repoName + ' 2> /dev/null')
+			content += gitrepoContent(repoName,encrpytionPassword)
+			system('rm -rf ' + repoName)
+		open(zipName,'wb').write(content)
+	except:
+		print('ERROR: no such file found')
+		exit(1)
 
 
 
