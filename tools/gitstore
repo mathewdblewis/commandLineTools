@@ -49,16 +49,11 @@ def createRepo(token,repoName):
 		print("ERROR: a file by this name already exists")
 		exit(1)
 
-def createFile(token,userName,repoName,fileName,fileContent,encrpytionPassword):
-	C = getCipher(encrpytionPassword)
-	# try:
+def createFile(token,repo,fileName,fileContent,C):
 	print('creating new file: ' + fileName, flush=True)
-	g = Github(token)
-	repo = g.get_repo(userName+"/"+repoName)
-	if encrpytionPassword != '': fileContent = C.encrypt(fileContent)
-	message = repo.create_file(fileName, "commit message", fileContent, branch="test")
-	# except:
-		# print("ERROR: file not created")
+	if C != '': fileContent = C.encrypt(fileContent)
+	repo.create_file(fileName, "commit message", fileContent, branch="test") # this is slow
+
 
 def delRepo(token,userName,repoName):
 	print('deleting the repo ' + repoName)
@@ -67,6 +62,7 @@ def delRepo(token,userName,repoName):
 	system(curl + token + url + userName + "/"+repoName)
 
 def uploadZip(token,userName,encrpytionPassword,zipName):
+	C = getCipher(encrpytionPassword)
 	try: repos = open(zipName,'rb').read()
 	except:
 		print(zipName+' not found')
@@ -80,13 +76,14 @@ def uploadZip(token,userName,encrpytionPassword,zipName):
 	for i in range(len(repos)):
 		repoName = zipName+'_'+str(i).zfill(len(str(maxrepos)))
 		createRepo(token,repoName)
+		repo = Github(token).get_repo(userName+"/"+repoName)
 		if i == 0:
-			createFile(token,userName,repoName,'numRepos.txt',str(len(repos)),'')
+			createFile(token,repo,'numRepos.txt',str(len(repos)),'')
 		files = repos[i]
-		createFile(token,userName,repoName,'numFiles.txt',str(len(files)),'')
+		createFile(token,repo,'numFiles.txt',str(len(files)),'')
 		for j in range(len(files)):
 			fileName = repoName+'file'+str(j).zfill(len(str(maxfiles)))
-			createFile(token,userName,repoName,fileName,files[j],encrpytionPassword)
+			createFile(token,repo,fileName,files[j],C)
 
 def delZip(token,username,password,zipName):
 	try:
