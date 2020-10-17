@@ -6,6 +6,12 @@ multithread it to speed it up
 have it keep track of time so as to give an estimated time remaining
 have it be able to restart after crashing
 eg: it stops at file 42, then it knows to start uploading at file 43
+
+THINGS THAT WOULD BE NICE:
+automated ability to set the repo to private
+have the file name also be encrypted (this is probably over kill)
+
+
 '''
 
 
