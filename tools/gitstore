@@ -1,5 +1,16 @@
 #!/usr/local/bin/python3
 
+'''
+THINGS TO DO:
+multithread it to speed it up
+have it keep track of time so as to give an estimated time remaining
+have it be able to restart after crashing
+eg: it stops at file 42, then it knows to start uploading at file 43
+'''
+
+
+
+
 from github import Github # pygithub.readthedocs.io/en/latest
 from sys import argv
 from os import system
