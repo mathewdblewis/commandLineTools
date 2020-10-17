@@ -143,12 +143,15 @@ keyfile = expanduser('~')+'/.gitstore.'+username+".json.enc"
 try:
 	content = open(keyfile,'rb').read()
 except:
-	print("The file "+keyfile+' was not found')
+	print("The key file "+keyfile+' was not found')
+	print('Enter "q" to quit or anything else to continue and create a new key file')
+	if input(':') == 'q': exit()
 	print("Please input the following:")
 	password = getpass('Enter your github password: ')
 	token = getpass('Enter your github token: ')
 	content = json.dumps({"password":password,'token':token}).encode('utf-8')
 	open(keyfile,'wb').write(getCipher(encrpytionPassword).encrypt(content))
+	exit()
 try:
 	key = json.loads(getCipher(encrpytionPassword).decrypt(content))
 	password,token = key['password'],key['token']
