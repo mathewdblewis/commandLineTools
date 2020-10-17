@@ -13,8 +13,8 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 salt = b'3.141592653589793'
-maxbytes = 10*1000**2	# 10MB
-maxfiles = 499			# 499*10MB = 4990MB = 4.99GB
+maxbytes = 1*1000**2	# 1MB
+maxfiles = 4999			# 4999*1MB = 4999MB = 4.999GB
 maxrepos = 100			# 
 
 
@@ -34,14 +34,14 @@ def createRepo(token,repoName):
 
 def createFile(token,userName,repoName,fileName,fileContent,encrpytionPassword):
 	C = getCipher(encrpytionPassword)
-	try:
-		print('creating new file: ' + fileName, flush=True)
-		g = Github(token)
-		repo = g.get_repo(userName+"/"+repoName)
-		if encrpytionPassword != '': fileContent = C.encrypt(fileContent)
-		message = repo.create_file(fileName, "commit message", fileContent, branch="test")
-	except:
-		print("ERROR: file not created")
+	# try:
+	print('creating new file: ' + fileName, flush=True)
+	g = Github(token)
+	repo = g.get_repo(userName+"/"+repoName)
+	if encrpytionPassword != '': fileContent = C.encrypt(fileContent)
+	message = repo.create_file(fileName, "commit message", fileContent, branch="test")
+	# except:
+		# print("ERROR: file not created")
 
 def delRepo(token,userName,repoName):
 	print('deleting the repo ' + repoName)
