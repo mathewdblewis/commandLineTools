@@ -39,7 +39,6 @@ for i in range(0,n-s,s):
     ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=(1,c[i],0), alpha=0.4)
 
 # Remove all the axis clutter, leaving just the curve.
-ax.set_axis_off()
 
 plt.show()
 
