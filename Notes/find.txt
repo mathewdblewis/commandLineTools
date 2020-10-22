@@ -1,0 +1,7 @@
+# this is how you find a file in a directory tree
+find . -name "theNameOfTheFile.txt"
+
+replace '.' with whatever directory you want to search through and its children
+
+
+
