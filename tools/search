@@ -1,4 +1,12 @@
 #!/usr/local/bin/python3
+
+'''
+THINGS TO DO:
+have a file that you save the browser to and functionality
+to change the default browser
+'''
+
+
 from sys import argv
 from os import system
 

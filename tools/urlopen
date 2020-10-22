@@ -1,0 +1,16 @@
+#!/usr/local/bin/python3
+
+from sys import argv
+from os import system
+
+if len(argv)!=2:
+  print("intput 1 argument: the url of the website")
+  exit(1)
+
+browser = 'Firefox'
+website = argv[1]
+if website[:8] != 'https://': website = 'https://' + website
+
+system('open ' + website + ' -a ' + browser)
+
+
