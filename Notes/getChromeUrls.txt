@@ -1,0 +1,4 @@
+running this will get teh chrome tab urls
+osascript -e 'tell application "Google Chrome" to get URL of tab 4 of window 1'
+
+
