@@ -1,51 +1,22 @@
 #!/usr/local/bin/python3
 
-from os import system; import sys; from subprocess import check_output as check
-# from ascii import getErrors
+from os import system; from sys import argv
 
-# this is the path to pdflatex, change if nessisary
-path = '/Library/TeX/texbin/pdflatex'
-
-# if the input is not correctly formated tell the user how to use this program
-if len(sys.argv) not in [2,3] or (len(sys.argv)==3 and sys.argv[2]!='-V'):
-	print('The first argument must be the name of the latex file to compile')
-	print('The optional second argument "-V" may be including')
-	print('Doing so results in verbose output')
-	system('zsh; subl *.tex; open *.pdf')
-	exit(0)
-
-# get file name
-filename = sys.argv[1]
-
-# check the file exists
-try:
-	open(filename)
-except IOError:
-	print('file "' + filename + '" not found')
+if len(argv) != 2:
+	print('INPUT: 1 parameter, the name of the latex file to compile, eg:')
+	print('    mytex file.tex')
+	print('optionally, you may pass the file name without the extension, eg:')
+	print('    mytex file.')
 	exit(1)
 
-# run ascii.getErrors on the file make sure it doesn't have non ascii characters
-'''
-errors = getErrors([filename])
-if errors != '':
-	print(errors)
+filename = argv[1]
+if filename[-3:] == 'pdf': filename = filename[:-3] + 'tex'
+if filename[-3:] != 'tex': filename += 'tex'
+try: open(filename,'r')
+except:
+	print(filename+' was not found')
 	exit(1)
-'''
+system('/Library/TeX/texbin/pdflatex ' + filename)
+system('rm -rf '+' '.join([filename[:-3]+ext for ext in ['aux','log','out']]))
 
-# run the compiler and remove unnessisary files
-output = check([path, filename]).decode("utf-8")
-system('rm -f *.aux *.log *.gz')
-
-# if we are not in verbose mode clean the output so it looks nice
-if len(sys.argv)==2:
-	output = "\n".join(output.split('\n\n')[1:-1])
-
-
-# if there is no output, exit
-# this prevents the printing of a single empty line
-if output=='':
-	exit()
-
-# return the output
-print(output)
 
