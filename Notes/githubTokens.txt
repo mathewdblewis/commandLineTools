@@ -1,0 +1,5 @@
+go here to generate github tokens
+github.com/settings/tokens
+these are used to access github via CLI
+
+
