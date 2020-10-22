@@ -1,0 +1,2 @@
+this lists all the remote places for the repo:
+git remote -v
