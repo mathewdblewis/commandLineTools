@@ -1,5 +1,23 @@
 #!/usr/local/bin/python3
 
+'''
+features to add:
+tor: does all the requests through tor for privacy
+watch list:
+has as list of videos to watch
+can be updated manually (add a video to the list)
+can be updated by adding all followed channels un watched videos to the list
+be able to add channels to different lists
+have all the data stored in a single json file '.youtube.json'
+
+advanced feature (will be hard to impliment):
+everytime you open a link in the chosen browser,
+if it is a youtube link, grab the link and save it to a file
+this way we can have a 'watched' list
+'''
+
+
+
 from os import system; from time import sleep
 import urllib.request; from sys import argv
 from multiprocessing import Pool
