@@ -1,2 +1,9 @@
 this lists all the remote places for the repo:
 git remote -v
+
+more info here:
+https://www.git-tower.com/learn/git/commands/git-remote/
+
+aparently, you can add a 'production' repo
+this is a nice feature, try using this
+
