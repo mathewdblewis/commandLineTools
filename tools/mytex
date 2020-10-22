@@ -5,8 +5,10 @@ from os import system; from sys import argv
 if len(argv) != 2:
 	print('INPUT: 1 parameter, the name of the latex file to compile, eg:')
 	print('    mytex file.tex')
-	print('optionally, you may pass the file name without the extension, eg:')
+	print('Optionally, you may pass the file name without the extension, eg:')
 	print('    mytex file.')
+	print('Or, you may pass the name of the generated pdf file, eg:')
+	print('    mytex file.pdf')
 	exit(1)
 
 filename = argv[1]
@@ -17,6 +19,6 @@ except:
 	print(filename+' was not found')
 	exit(1)
 system('/Library/TeX/texbin/pdflatex ' + filename)
-system('rm -rf '+' '.join([filename[:-3]+ext for ext in ['aux','log','out']]))
-
+# system('rm -rf '+' '.join([filename[:-3]+ext for ext in ['aux','log','out']]))
+system('open ' + filename[:-3] + 'pdf')
 
