@@ -1,0 +1,19 @@
+#!/usr/local/bin/python3
+from os import system; from sys import argv
+import subprocess; import tempfile
+
+if len(argv) != 3:
+	print("This program pulls a git repo to a given folder")
+	print("Input: url to pull from followed by")
+	print("the name of the new directory to create and pull to")
+	exit(1)
+
+url,fldr = argv[1],argv[2]
+fp = tempfile.TemporaryFile()
+if subprocess.run(["mkdir", fldr],stdout=fp,stderr=fp).returncode != 0:
+	print('"' + fldr + '" already exists')
+	exit(1)
+cmd  = 'cd ' + fldr + ';git init > /dev/null;'
+cmd += 'git pull ' + url + ' &> /dev/null;rm -rf .git*'
+system(cmd)
+
