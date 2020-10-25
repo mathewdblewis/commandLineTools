@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 from os import system; from sys import argv
-import subprocess; import tempfile
+import subprocess; import tempfile; import time
 
 if len(argv) != 3:
 	print("This program pulls a git repo to a given folder")
@@ -16,4 +16,11 @@ if subprocess.run(["mkdir", fldr],stdout=fp,stderr=fp).returncode != 0:
 cmd  = 'cd ' + fldr + ';git init > /dev/null;'
 cmd += 'git pull ' + url + ' &> /dev/null;rm -rf .git*'
 system(cmd)
+
+# system('tar -cz temp.zip ' + fldr)
+
+hsh = str(hash(subprocess.check_output(['tar','-cz',fldr])))
+msg = '\nretrieved at '+str(time.time())+'\nfrom '+url+'\nwith code hash '+hsh
+try:     open(fldr+'/README.md','a').write(msg)
+except:  open(fldr+'/README.md','w').write(msg)
 
