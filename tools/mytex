@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 
-from os import system; from sys import argv
+from os import system; from sys import argv; import datetime
 
 if len(argv) != 2:
 	print('INPUT: 1 parameter, the name of the latex file to compile, eg:')
@@ -12,13 +12,28 @@ if len(argv) != 2:
 	exit(1)
 
 filename = argv[1]
-if filename[-3:] == 'pdf': filename = filename[:-3] + 'tex'
-if filename[-3:] != 'tex': filename += 'tex'
+if filename[-4:] == '.pdf': filename = filename[:-4] + '.tex'
+if filename[-1]  == '.':   filename += 'tex'
+if filename[-4:] != '.tex': filename += '.tex'
 try: open(filename,'r')
 except:
-	print(filename+' was not found')
-	exit(1)
+	date = datetime.date.today().strftime("%B %d, %Y")
+	fp = open(filename,'w')
+	fp.write('\\documentclass{article}\n')
+	fp.write('\\usepackage{amsmath,amssymb,listings,amsfonts,graphicx}\n')
+	fp.write('\\title{TITLE}\n')
+	fp.write('\\author{Mathew Lewis}\\date{' + date + '}\n')
+	fp.write('\\begin{document}\n')
+	fp.write('\\newcommand{\\R}{\\mathbb{R}}\n')
+	fp.write('\\newcommand{\\E}{\\exists}\n')
+	fp.write('\\newcommand{\\A}{\\forall}\n')
+	fp.write('\\noindent\\textbf{TITLE}\\\\\n')
+	fp.write('\\noindent\\textbf{Mathew Lewis}\n')
+	fp.write('\\bigbreak\\noindent\n')
+	fp.write('\n\\end{document}\n')
+	fp.close()
 system('/Library/TeX/texbin/pdflatex ' + filename)
-# system('rm -rf '+' '.join([filename[:-3]+ext for ext in ['aux','log','out']]))
+system('rm -rf '+' '.join([filename[:-3]+ext for ext in ['aux','log','out']]))
 system('open ' + filename[:-3] + 'pdf')
+
 
