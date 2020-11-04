@@ -32,22 +32,21 @@ def titleAndVids(url):
 	# and where title is the title of the channel
 	# each vid is a tuple (vidTitle,url)
 	# where vidTitle is the title of the video and url is the url of the video
-	html = urllib.request.urlopen(url).read().decode()
-	title = html.split('<meta name="title" content="')[1].split('">')[0]
-	title = "'".join(title.split('&#39;'))
-
-	print(title)
-	
-	L = [x.split('"url":"')[:2] for x in html.split('"title":{"runs":[{"text":"')[1:]]
-	vids = []
-	for l in L:
-		vidTitle = '"'.join(l[0].split('"}],')[0].split('\\"'))
-		print(vidTitle)
-		end = 'Want to subscribe to this channel?'
-		if vidTitle[:len(end)] == end: break
-		vidUrl = l[1].split('","')[0]
-		vids += [(vidTitle,'https://youtube.com'+vidUrl)]
-	return (title,vids)
+	try:
+		html = urllib.request.urlopen(url).read().decode()
+		title = html.split('<meta name="title" content="')[1].split('">')[0]
+		title = "'".join(title.split('&#39;'))
+		
+		L = [x.split('"url":"')[:2] for x in html.split('"title":{"runs":[{"text":"')[1:]]
+		vids = []
+		for l in L:
+			vidTitle = '"'.join(l[0].split('"}],')[0].split('\\"'))
+			end = 'Want to subscribe to this channel?'
+			if vidTitle[:len(end)] == end: break
+			vidUrl = l[1].split('","')[0]
+			vids += [(vidTitle,'https://youtube.com'+vidUrl)]
+		return (title,vids)
+	except: return ('','')
 
 def allVids(urls):
 	# return a dictionary with keys as channel title and values as lists
@@ -128,11 +127,6 @@ def main():
 
 
 if __name__ == '__main__':
-	x = titleAndVids('https://www.youtube.com/c/TechIngredients/videos')
-	print(x)
-
-	exit()
-
 	path = str(pathlib.Path(__file__).parent.absolute())+'/'
 	channels = path+'channels.txt'
 
