@@ -24,7 +24,7 @@ from multiprocessing import Pool
 import argparse; import pathlib
 from json import loads,dumps
 
-
+debug = True
 
 def titleAndVids(url):
 	# returns (title,vids) where vids is a list of all the vids
@@ -32,27 +32,29 @@ def titleAndVids(url):
 	# and where title is the title of the channel
 	# each vid is a tuple (vidTitle,url)
 	# where vidTitle is the title of the video and url is the url of the video
-	html = urllib.request.urlopen(url).read().decode()
-	title = html.split('<meta name="title" content="')[1].split('">')[0]
-	title = "'".join(title.split('&#39;'))
-
-	print(title)
-	
-	L = [x.split('"url":"')[:2] for x in html.split('"title":{"runs":[{"text":"')[1:]]
-	vids = []
-	for l in L:
-		vidTitle = '"'.join(l[0].split('"}],')[0].split('\\"'))
-		print(vidTitle)
-		end = 'Want to subscribe to this channel?'
-		if vidTitle[:len(end)] == end: break
-		vidUrl = l[1].split('","')[0]
-		vids += [(vidTitle,'https://youtube.com'+vidUrl)]
-	return (title,vids)
+	while True:
+		try:
+			html = urllib.request.urlopen(url).read().decode()
+			open('temp.html','w').write(html)
+			if debug: print(url)
+			title = html.split('<meta name="title" content="')[1].split('">')[0]
+			title = "'".join(title.split('&#39;'))
+			L = [x.split('"url":"')[:2] for x in html.split('"title":{"runs":[{"text":"')[1:]]
+			vids = []
+			for l in L:
+				vidTitle = '"'.join(l[0].split('"}],')[0].split('\\"'))
+				end = 'YouTube TV'
+				if vidTitle[:len(end)] == end: break
+				vidUrl = l[1].split('","')[0]
+				vids += [(vidTitle,'https://youtube.com'+vidUrl)]
+			return (title,vids)
+		except: pass
 
 def allVids(urls):
 	# return a dictionary with keys as channel title and values as lists
 	# of videos on the channels video page
 	return {x[0]:x[1] for x in Pool().map(titleAndVids,urls)}
+	# return {x[0]:x[1] for x in [titleAndVids(url) for url in urls]}
 
 def channelUrls(channelFile):
 	# returns a list of all channel urls given in the input file
@@ -122,21 +124,21 @@ def main():
 
 
 
+def openAllChannels():
+	cf = channelUrls('channels.txt')
+	openUrls(cf,'Firefox')
 
 
 
 
 
 if __name__ == '__main__':
-	x = titleAndVids('https://www.youtube.com/c/TechIngredients/videos')
-	print(x)
-
-	exit()
-
 	path = str(pathlib.Path(__file__).parent.absolute())+'/'
 	channels = path+'channels.txt'
 
+	# openAllChannels()
 	unwatched(channels,'Firefox',10)
+	# unwatched(channels,'',100000)
 	# latestVids(channels,'Firefox')
 
 
