@@ -35,7 +35,6 @@ def titleAndVids(url):
 	while True:
 		try:
 			html = urllib.request.urlopen(url).read().decode()
-			open('temp.html','w').write(html)
 			if debug: print(url)
 			title = html.split('<meta name="title" content="')[1].split('">')[0]
 			title = "'".join(title.split('&#39;'))
