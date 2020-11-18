@@ -7,7 +7,7 @@
 import smtplib
 
 email = 'stevenrobinson48291@gmail.com' # Your email
-password = '8gg6SXNNZjkDXmg' # Your email account password
+password = '...' # Your email account password
 send_to_email = 'mathewdblewis@gmail.com' # Who you are sending the message to
 message = 'This is my message' # The message in the email
 
