@@ -1,3 +1,6 @@
+# learn how to do this here:
+# https://www.youtube.com/watch?v=YPiHBtddefI
+
 # go here to turn on less secure apps:
 # https://myaccount.google.com/lesssecureapps?pli=1
 
