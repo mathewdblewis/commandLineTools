@@ -37,6 +37,9 @@ def titleAndVids(url):
 		try:
 			html = urllib.request.urlopen(url).read().decode()
 			if debug: print(url)
+			if '<meta name="title" content="' not in html:
+				open('temp','w').write(html)
+				raise Exception('title not found')
 			title = html.split('<meta name="title" content="')[1].split('">')[0]
 			title = "'".join(title.split('&#39;'))
 			L = [x.split('"url":"')[:2] for x in html.split('"title":{"runs":[{"text":"')[1:]]
@@ -48,7 +51,8 @@ def titleAndVids(url):
 				vidUrl = l[1].split('","')[0]
 				vids += [(vidTitle,'https://youtube.com'+vidUrl)]
 			return (title,vids)
-		except Exception as e: print(e)
+		except Exception as e:
+			return ('','')
 	print("couldn't read " + url)
 
 def allVids(urls):
