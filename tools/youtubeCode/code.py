@@ -25,6 +25,7 @@ import argparse; import pathlib
 from json import loads,dumps
 
 debug = True
+tries = 10
 
 def titleAndVids(url):
 	# returns (title,vids) where vids is a list of all the vids
@@ -32,7 +33,7 @@ def titleAndVids(url):
 	# and where title is the title of the channel
 	# each vid is a tuple (vidTitle,url)
 	# where vidTitle is the title of the video and url is the url of the video
-	while True:
+	for _ in range(tries):
 		try:
 			html = urllib.request.urlopen(url).read().decode()
 			if debug: print(url)
@@ -47,7 +48,8 @@ def titleAndVids(url):
 				vidUrl = l[1].split('","')[0]
 				vids += [(vidTitle,'https://youtube.com'+vidUrl)]
 			return (title,vids)
-		except: pass
+		except Exception as e: print(e)
+	print("couldn't read " + url)
 
 def allVids(urls):
 	# return a dictionary with keys as channel title and values as lists
