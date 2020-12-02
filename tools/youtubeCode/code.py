@@ -129,8 +129,8 @@ def main():
 
 
 
-def openAllChannels():
-	cf = channelUrls('channels.txt')
+def openAllChannels(channels):
+	cf = channelUrls(channels)
 	openUrls(cf,'Firefox')
 
 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
 	path = str(pathlib.Path(__file__).parent.absolute())+'/'
 	channels = path+'channels.txt'
 
-	# openAllChannels()
+	# openAllChannels(channels)
 	unwatched(channels,'Firefox',10)
 	# unwatched(channels,'',100000)
 	# latestVids(channels,'Firefox')
