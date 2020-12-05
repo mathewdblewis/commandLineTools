@@ -1,0 +1,46 @@
+#!/usr/local/bin/python3
+
+from sys import argv
+from subprocess import check_output as call
+
+if len(argv)!=2:
+	exit(1)
+
+ext,x = argv[1],0
+files = call('ls', shell=True).decode().split('\n')[:-1]
+
+
+for file in files:
+	x += 1
+	name = str(x).zfill(len(str(len(files))))
+	call('mv ' + file + ' ' + name + '.' + ext, shell=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
