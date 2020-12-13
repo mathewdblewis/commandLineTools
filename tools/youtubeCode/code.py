@@ -37,11 +37,6 @@ def titleAndVids(url):
 		try:
 			html = urllib.request.urlopen(url).read().decode()
 			if debug: print(url)
-			if '<meta name="title" content="' not in html:
-				open('temp','w').write(html)
-				raise Exception('title not found')
-			title = html.split('<meta name="title" content="')[1].split('">')[0]
-			title = "'".join(title.split('&#39;'))
 			L = [x.split('"url":"')[:2] for x in html.split('"title":{"runs":[{"text":"')[1:]]
 			vids = []
 			for l in L:
@@ -50,7 +45,7 @@ def titleAndVids(url):
 				if vidTitle[:len(end)] == end: break
 				vidUrl = l[1].split('","')[0]
 				vids += [(vidTitle,'https://youtube.com'+vidUrl)]
-			return (title,vids)
+			return (url,vids)
 		except Exception as e:
 			return ('','')
 	print("couldn't read " + url)
@@ -140,9 +135,9 @@ def openAllChannels(channels):
 if __name__ == '__main__':
 	path = str(pathlib.Path(__file__).parent.absolute())+'/'
 	channels = path+'channels.txt'
-
-	# openAllChannels(channels)
-	unwatched(channels,'Firefox',10)
+	if len(argv) == 1: unwatched(channels,'Firefox',10)
+	else: openAllChannels(channels)
+	
 	# unwatched(channels,'',100000)
 	# latestVids(channels,'Firefox')
 
