@@ -3,44 +3,16 @@
 from sys import argv
 from subprocess import check_output as call
 
-if len(argv)!=2:
+if len(argv)!=3:
+	print('example: numbername name extension')
 	exit(1)
 
-ext,x = argv[1],0
+name,ext,x = argv[1],argv[2],0
 files = call('ls', shell=True).decode().split('\n')[:-1]
 
 
 for file in files:
 	x += 1
-	name = str(x).zfill(len(str(len(files))))
-	call('mv ' + file + ' ' + name + '.' + ext, shell=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	num = str(x).zfill(len(str(len(files))))
+	call('mv "' + file + '" ' + name + num + '.' + ext, shell=True)
 
