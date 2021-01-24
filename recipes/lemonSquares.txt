@@ -1,16 +1,19 @@
 modified from: allrecipes.com/recipe/10294/the-best-lemon-bars
 
+crust:
 0.75 cup butter, softened
 0.33 cup white sugar
 1 tsp vanilla
 1.50 cups all-purpose flour
+
+custurd:
 8 eggs
 2 cups white sugar
-0.50 cup all-purpose flour
+0.50 cup flour
 5 lemons, juice and zest
 
 preheat oven to 350 F
-mix butter 1.5 cups flour and .33 cup sugar and vanilla, put in the bottom of pan
+mix butter 1.50 cups flour and .33 cup sugar and vanilla, put in the bottom of pan
 bake crust 15 minutes
 wisk 2 cups sugar, 0.50 cup flour, eggs, lemon juice and pour over crust
 bake 25 minutes
