@@ -1,0 +1,2 @@
+#!/bin/bash
+git add -A &&> /dev/null; git commit -m "." &> /dev/null; git push &> /dev/null
